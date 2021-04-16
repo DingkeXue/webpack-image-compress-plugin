@@ -9,7 +9,9 @@ English | [简体中文](./README.zh-CN.md)
 
 ```
 A webpack plugin to compress images(png|jpe?g) by using tinypng.com
-You can view the specific compression information through the log, and you can control the number of concurrent requests
+
+You can view the specific compression information through the log, 
+and you can control the number of concurrent requests
 ```
 
 ## Install
