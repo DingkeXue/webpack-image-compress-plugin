@@ -14,7 +14,9 @@ module.exports = class WebpackImageCompressPlugin {
     this._options = Object.assign({
       log: true,
       compress: true,
-      concurrency: 20
+      concurrency: 20,
+      minSize: 1024 * 10,
+      maxSize: -1
     }, options)
   }
 
@@ -44,10 +46,11 @@ module.exports = class WebpackImageCompressPlugin {
 
   async handleImgAssets(compilation) {
     const ImgAssets = compilation.assets
-    const images = Object.keys(compilation.assets).filter(asset => IMG_TEST.test(asset))
+    let images = Object.keys(compilation.assets).filter(asset => IMG_TEST.test(asset))
     if (!images.length) {
       return Promise.resolve()
     }
+    images = this.filterImages(images, ImgAssets)
     const imgPromises = images.map(img => this.compressImg(ImgAssets, img))
     const spinner = Ora('Start compressing......').start()
     await this.PromiseLimit(imgPromises, this._options.concurrency).then(res => {
@@ -56,13 +59,40 @@ module.exports = class WebpackImageCompressPlugin {
     })
   }
 
-  PromiseLimit(pomiseArr, limit = 20) {
+  /**
+   * @description: fitler images according to minSize/maxSize
+   * @param {*} images image' name array
+   * @param {*} assets webpack assets
+   * @return {*}
+   */
+  filterImages (images, assets) {
+    return images.filter(image => {
+      const size = assets[image].source().length
+      if (this._options.maxSize > 0 && this._options.minSize > 0) {
+        return size <= Number(this._options.maxSize) && size >= Number(this._options.minSize)
+      } else if (this._options.minSize) {
+        return size >= Number(this._options.minSize)
+      } else if (this._options.maxSize > 0) {
+        return size <= Number(this._options.maxSize)
+      } else {
+        return true
+      }
+    })
+  }
+
+  /**
+   * @description: promise limit Refer https://www.npmjs.com/package/tiny-async-pool
+   * @param {*} promiseArr promise array
+   * @param {*} limit limit size
+   * @return {*}
+   */
+  PromiseLimit(promiseArr, limit = 20) {
     let i = 0;
     const result = [];
     const executing = [];
     const queue = function() {
-      if (i === pomiseArr.length) return Promise.all(executing);
-      const p = pomiseArr[i++];
+      if (i === promiseArr.length) return Promise.all(executing);
+      const p = promiseArr[i++];
       result.push(p);
       const e = p.then(() => executing.splice(executing.indexOf(e), 1));
       executing.push(e);
@@ -78,6 +108,12 @@ module.exports = class WebpackImageCompressPlugin {
   }
   
 
+  /**
+   * @description: compress images action
+   * @param {*} assets webpack assets
+   * @param {*} key image name
+   * @return {*}
+   */
   async compressImg(assets, key) {
     try {
       const file = assets[key].source()
@@ -94,6 +130,11 @@ module.exports = class WebpackImageCompressPlugin {
     }
   }
 
+  /**
+   * @description: upload images
+   * @param {source} source image source
+   * @return response 
+   */
   uploadImg(source) {
     const header = DefaultHeader()
     return new Promise((resolve, reject) => {
@@ -107,6 +148,11 @@ module.exports = class WebpackImageCompressPlugin {
     })
   }
 
+  /**
+   * @description: download compressed images
+   * @param { url } url download url
+   * @return binary file 
+   */
   downloadImg(url) {
     const URL = new Url.URL(url)
     return new Promise((resolve, reject) => {

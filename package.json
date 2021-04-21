@@ -1,6 +1,6 @@
 {
 		"name": "webpack-image-compress-plugin",
-		"version": "0.0.1",
+		"version": "0.0.2",
 		"description": "A webpack plugin to compress images(png|jpe?g) by using tinypng.com",
 		"main": "./dist/index.js",
 		"scripts": {
@@ -36,7 +36,17 @@
 				"webpack-sources": "2.0.1",
 				"webpackbar": "4.0.0"
 		},
-		"keywords": ["img", "image", "compress", "img-compress", "compression", "webpack"],
+		"bugs": "https://github.com/DingkeXue/webpack-image-compress-plugin/issues",
+		"homepage": "https://github.com/DingkeXue/webpack-image-compress-plugin",
+		"repository": "https://github.com/DingkeXue/webpack-image-compress-plugin.git",
+		"keywords": [
+				"img",
+				"image",
+				"compress",
+				"img-compress",
+				"compression",
+				"webpack"
+		],
 		"author": "DingkeXue <https://github.com/DingkeXue>",
 		"license": "MIT"
 }
