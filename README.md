@@ -25,13 +25,25 @@ $ npm i webpack-image-compress-plugin --save-dev
 ```js
 const WebpackImageCompressPlugin = require('webpack-image-compress-plugin')
 
+// Use Default Config
+module.exports = {
+  plugins: [new WebpackImageCompressPlugin()]
+}
+```
+
+---------------------or---------------------- 
+
+```js
+// Custom Config
 module.exports = {
   //... your config
   plugins: [
     new WebpackImageCompressPlugin({
       log: true, // Boolean ===> Show compressed information on the console (default: true)
       compress: process.env.NODE_ENV === "production", // Boolean ===> Whether to enable compression (default: true)
-      concurrency: 20 // Number ===> The number of concurrent requests (default: 20)
+      concurrency: 20, // Number ===> The number of concurrent requests (default: 20)
+      minSize: 1024 * 10, // Number ===> Minimum size of image compression (default: 1024 * 10)
+      maxSize: 1024 * 100 // Number ===> Maximum size of image compression (default: no limit)
     })
   ]
 }
@@ -48,7 +60,9 @@ module.exports = {
       new WebpackImageCompressPlugin({
         log: true, // Boolean ===> Show compressed information on the console
         compress: process.env.NODE_ENV === "production", // Boolean ===> Whether to enable compression
-        concurrency: 20 // Number ===> The number of concurrent requests (default: 20)
+        concurrency: 20, // Number ===> The number of concurrent requests (default: 20)
+        minSize: 1024 * 10, // Number ===> Minimum size of image compression (default: 1024 * 10)
+        maxSize: 1024 * 100 // Number ===> Maximum size of image compression (default: no limit)
       })
     ]
   }

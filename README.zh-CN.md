@@ -23,13 +23,25 @@ $ npm i webpack-image-compress-plugin --save-dev
 ```js
 const WebpackImageCompressPlugin = require('webpack-image-compress-plugin')
 
+// 使用默认配置
+module.exports = {
+  plugins: [new WebpackImageCompressPlugin()]
+}
+```
+
+---------------------or---------------------- 
+
+```js
+// 自定义配置
 module.exports = {
   //... 其它配置
   plugins: [
     new WebpackImageCompressPlugin({
       log: true, // 布尔值  是否在控制台打印压缩信息，默认为true
       compress: process.env.NODE_ENV === "production", // 布尔值  是否压缩图片
-      concurrency: 20 // 整数  请求并发数
+      concurrency: 20, // 整数  请求并发数
+      minSize: 1024 * 10, // 整数  图像压缩的最小尺寸 （默认 10k）
+      maxSize: 1024 * 100 // 整数  图像压缩的最大尺寸 （默认无限制）
     })
   ]
 }
@@ -46,7 +58,9 @@ module.exports = {
       new WebpackImageCompressPlugin({
         log: true, // 布尔值  是否在控制台打印压缩信息，默认为true
         compress: process.env.NODE_ENV === "production", // 布尔值  是否压缩图片 默认为true
-        concurrency: 20 // 整数  请求并发数 默认为20
+        concurrency: 20, // 整数  请求并发数 默认为20
+        minSize: 1024 * 10, // 整数  图像压缩的最小尺寸 （默认 10k）
+        maxSize: 1024 * 100 // 整数  图像压缩的最大尺寸 （默认无限制）
       })
     ]
   }
