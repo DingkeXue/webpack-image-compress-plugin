@@ -1,6 +1,6 @@
 {
 		"name": "webpack-image-compress-plugin",
-		"version": "0.0.2",
+		"version": "0.0.4",
 		"description": "A webpack plugin to compress images(png|jpe?g) by using tinypng.com",
 		"main": "./dist/index.js",
 		"scripts": {

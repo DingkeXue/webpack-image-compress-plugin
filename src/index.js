@@ -91,7 +91,7 @@ module.exports = class WebpackImageCompressPlugin {
     const result = [];
     const executing = [];
     const queue = function() {
-      if (i === promiseArr.length) return Promise.all(executing);
+      if (i === promiseArr.length) return Promise.resolve();
       const p = promiseArr[i++];
       result.push(p);
       const e = p.then(() => executing.splice(executing.indexOf(e), 1));
