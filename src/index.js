@@ -6,7 +6,6 @@ const { DefaultHeader } = require('../utils/header')
 const { IMG_TEST } = require('../utils/regexp')
 const { ByteSize } = require('trample/node')
 const { RawSource } = require("webpack-sources")
-const { compilation } = require('webpack')
 const pluginName = 'WebpackImageCompressPlugin'
 
 
@@ -42,7 +41,7 @@ module.exports = class WebpackImageCompressPlugin {
         callback()
       })
     } else {
-      console.log(`The webpack version number supported by img-compress-plugin is 3-5！, install: https://webpack.js.org/`)
+      console.log(`The webpack version number supported by ${pluginName} is 3-5！, install: https://webpack.js.org/`)
     }
   }
 
@@ -54,7 +53,7 @@ module.exports = class WebpackImageCompressPlugin {
     }
     images = this.filterImages(images, ImgAssets)
     const imgPromises = images.map(img => this.compressImg(ImgAssets, img))
-    const spinner = Ora('Start compressing......').start()
+    const spinner = Ora('Compressing Image......').start()
     await this.promiseLimit(imgPromises, this._options.concurrency).then(res => {
       spinner.stop()
       this._options.log && res && res.forEach(msg => console.log(msg))
